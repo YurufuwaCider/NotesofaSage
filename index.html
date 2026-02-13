@@ -3,409 +3,453 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YurufuwaCider - Ashen One's Portfolio</title>
-    <!-- Tailwind CSSのロード --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- Interフォントを使用 (Tailwindデフォルト) --><style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+    <title>YurufuwaCider</title>
+    
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (DotGothic16 for pixel vibes) -->
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Base Styles */
         body {
-            font-family: 'Inter', sans-serif;
-            /* 荒廃した石畳のような背景 */
-            background-color: #121212;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23232323' fill-opacity='0.6'%3E%3Cpath d='M36 34.721v1.161l-10 4.888v-1.161l10-4.888zm0 1.258v1.077l-10 4.793v-1.077l10-4.793zM5.584 41.564l4.908-1.284 3.447 13.111-4.908 1.284-3.447-13.111zm11.39 12.062l4.908-1.284 3.447 13.111-4.908 1.284-3.447-13.111zm-11.39-12.062l4.908-1.284 3.447 13.111-4.908 1.284-3.447-13.111zM1 39l2 11 11-2-2-11H1zm5-2.586l3.414 3.414L10.5 40l-.586-.586L6 35.828l3.414 3.414L10.5 40l-.586-.586z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            font-family: 'Space Mono', 'DotGothic16', monospace;
+            background-color: #111;
+            color: white;
+            overflow-x: hidden;
         }
 
-        /* カスタムスタイル: ダークソウル風のボタン/枠線 */
-        .ds-button {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 0 0 #4a0404; /* 下の影（血のような赤） */
-            border: 2px solid #5d5d5d;
-        }
-        .ds-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 0 #5d0707;
-            background-color: #27272a; /* hover時の深みを出す */
-        }
-        .ds-container {
-            border: 4px solid #3d3d3d; /* 重厚な境界線 */
-            background-color: rgba(24, 24, 27, 0.95); /* bg-zinc-900 95%透明 */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* 影で浮き上がらせる */
+        /* Custom Selection Color */
+        ::selection {
+            background-color: #ff00ff;
+            color: white;
         }
 
-        /* アイコンの色を炎のような色にする */
-        .icon-flame {
-            color: #d97706; /* amber-600 */
+        /* Animations */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse-slow {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Utility Classes */
+        .glitch-text {
+            position: relative;
+        }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hide Scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff00ff;
         }
     </style>
 </head>
+<body class="min-h-screen relative">
 
-<body class="text-gray-200 min-h-screen flex flex-col">
+    <!-- Background Grid & Noise Overlay -->
+    <div class="fixed inset-0 pointer-events-none opacity-20" 
+         style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
 
-    <!-- サイトヘッダー (ステータスバー風) --><header class="bg-black/70 p-4 border-b-4 border-amber-600 shadow-xl fixed w-full z-10">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <!-- HPゲージ風要素 --><div class="flex items-center space-x-4">
-                <span class="text-xl font-bold text-amber-500 uppercase tracking-widest">
-                    賢者の手記
-                </span>
-                <div class="w-48 h-4 bg-gray-700 border border-gray-500 rounded-sm">
-                    <!-- HP満タンの表現 --><div class="h-full bg-red-700 rounded-sm" style="width: 100%;"></div>
-                </div>
-                <span id="user-id-display" class="text-xs text-gray-400"></span>
-            </div>
-
-            <!-- ナビゲーション (選択されたページが燃えるような色に) --><nav id="nav-menu" class="flex space-x-6 text-sm font-semibold uppercase">
-                <!-- 「古文書」ページを削除 --><button data-page="home" class="nav-btn transition-colors duration-200 hover:text-red-600 focus:outline-none focus:text-red-700">篝火</button>
-                <button data-page="profile" class="nav-btn transition-colors duration-200 hover:text-red-600 focus:outline-none focus:text-red-700">誓約</button>
-                <button data-page="works" class="nav-btn transition-colors duration-200 hover:text-red-600 focus:outline-none focus:text-red-700">遺物</button>
-                <button data-page="phantoms" class="nav-btn transition-colors duration-200 hover:text-red-600 focus:outline-none focus:text-red-700">幻影</button>
-            </nav>
+    <!-- Loading Overlay -->
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-64 h-2 bg-gray-800 rounded-full overflow-hidden mb-4">
+            <div class="h-full bg-[#ff00ff] w-full origin-left transform transition-transform duration-[2000ms]" style="animation: loadBar 2s ease-out forwards;"></div>
         </div>
+        <p class="text-[#00ff00] text-sm animate-pulse">SYSTEM BOOTING...</p>
+    </div>
+
+    <style>
+        @keyframes loadBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    </style>
+
+    <!-- Header / Top Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#111]/90 backdrop-blur-sm border-b border-[#333] flex justify-between items-center px-4 h-14">
+        <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span class="ml-3 font-bold text-xl tracking-tighter text-white">
+                YurufuwaCider <span class="text-[#ff00ff]">PROFILE</span>
+            </span>
+        </div>
+        <div class="hidden md:flex items-center gap-6 text-xs text-gray-400">
+            <span>GAME PROFILE</span>
+            <span id="clock" class="text-[#00ff00]">00:00:00</span>
+        </div>
+        <nav class="flex gap-4 text-sm font-bold">
+            <a href="#works" class="hover:text-[#ff00ff] transition-colors">PHOTO</a>
+            <a href="#about" class="hover:text-[#00ff00] transition-colors">PROFILE</a>
+        </nav>
     </header>
 
-    <!-- メインコンテンツエリア --><main id="main-content" class="flex-grow pt-28 pb-10 flex justify-center items-start">
-        <!-- コンテンツがここに挿入される --><p class="text-gray-500">
-            
-        </p>
+    <!-- Main Content -->
+    <main class="pt-24 px-4 md:px-8 max-w-7xl mx-auto relative z-10 pb-20">
+
+        <!-- Hero Section -->
+        <section class="mb-32 relative">
+            <div class="border-2 border-[#333] bg-[#1a1a1a] rounded-lg overflow-hidden shadow-[8px_8px_0px_0px_rgba(255,0,255,0.5)]">
+                <!-- Window Header -->
+                <div class="bg-[#333] px-3 py-1 flex justify-between items-center text-xs text-gray-300">
+                    <span>main_visual.exe</span>
+                    <div class="flex gap-1">
+                        <i data-lucide="minus" class="w-3 h-3"></i>
+                        <i data-lucide="square" class="w-3 h-3"></i>
+                        <i data-lucide="x" class="w-3 h-3"></i>
+                    </div>
+                </div>
+                <!-- Window Content -->
+                <div class="p-8 md:p-16 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+                    <div class="flex-1 z-10">
+                        <div class="inline-block px-3 py-1 bg-[#ff00ff] text-black text-xs font-bold mb-4 rounded-full">PLAY OF THE GAME</div>
+                        <h1 class="text-5xl md:text-8xl font-black leading-none mb-6 glitch-text" data-text="HELLO WORLD.">
+                            HELLO<br />
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff00ff] to-[#00ff00]">WORLD.</span>
+                        </h1>
+                        <p class="text-gray-400 max-w-md leading-relaxed mb-8">
+                            ゆるくてふわふわしたサイダーみたいにハジける<br />
+                            ゲーム好きな人間のプロフィールサイトです。
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="#works" class="bg-white text-black px-6 py-3 font-bold hover:bg-[#00ff00] hover:scale-105 transition-all flex items-center gap-2 inline-flex">
+                                <i data-lucide="monitor" class="w-4 h-4"></i> VIEW PHOTOS
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Visual (Abstract) -->
+                    <div class="w-full md:w-1/3 aspect-square relative">
+                        <div class="absolute inset-0 border-4 border-[#00ff00] rounded-full" style="animation: spin-slow 10s linear infinite;"></div>
+                        <div class="absolute inset-4 border-4 border-[#ff00ff] rounded-full" style="animation: spin-reverse-slow 15s linear infinite reverse;"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-6xl animate-pulse">🕹️</div>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Code -->
+                    <div class="absolute bottom-2 right-4 text-[10px] text-[#00ff00]/30 font-mono hidden md:block text-right whitespace-pre">
+> import creative.mind
+> loading assets...
+> system ready</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marquee Separator -->
+        <div class="w-full overflow-hidden bg-[#ff00ff] text-black py-2 mb-24 rotate-[-2deg] scale-110">
+            <div class="whitespace-nowrap animate-marquee font-bold text-xl">
+                DARK SOULS / Counter-Strike 2 / Apex Legends / Monster Hunter / Maple Story / BLUE PROTOCOL / ELDEN RING / Street Fighter 6 / VRchat / VRgame /
+            </div>
+        </div>
+
+        <!-- Works Section -->
+        <section id="works" class="mb-32">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <h2 class="text-4xl font-black mb-2 flex items-center gap-3">
+                        <span class="block w-4 h-8 bg-[#00ff00]"></span>
+                        PHOTOS
+                    </h2>
+                    <p class="text-gray-500 text-sm">写真一覧</p>
+                </div>
+                
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2" id="filter-container">
+                    <button data-filter="ALL" class="filter-btn px-4 py-2 text-sm font-bold border transition-all bg-[#ff00ff] border-[#ff00ff] text-black">ALL</button>
+                    <button data-filter="ILLUSTRATION" class="filter-btn px-4 py-2 text-sm font-bold border border-[#333] hover:border-white text-gray-400">GAME</button>
+                    <button data-filter="MOVIE" class="filter-btn px-4 py-2 text-sm font-bold border border-[#333] hover:border-white text-gray-400">MOVIE</button>
+                    <button data-filter="DESIGN" class="filter-btn px-4 py-2 text-sm font-bold border border-[#333] hover:border-white text-gray-400">REAL</button>
+                    <button data-filter="GOODS" class="filter-btn px-4 py-2 text-sm font-bold border border-[#333] hover:border-white text-gray-400">etc...</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="works-grid">
+                <!-- Work Item 1 -->
+                <div class="work-item group relative bg-[#1a1a1a] border border-[#333] hover:border-[#ff00ff] transition-all duration-300 hover:-translate-y-1" data-category="ILLUSTRATION">
+                    <div class="w-full aspect-video bg-pink-500 relative overflow-hidden">
+                        <img src="https://imgur.com/N9LPrk3" alt="Work 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold border border-[#00ff00]">CHECK</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[#00ff00] text-xs font-bold tracking-widest border border-[#00ff00] px-2 py-0.5 rounded-sm">REAL</span>
+                            <span class="text-gray-500 text-xs">2026</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-[#ff00ff] transition-colors">桜</h3>
+                        <div class="w-full h-px bg-[#333] group-hover:bg-[#ff00ff] transition-colors my-3"></div>
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span></span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Item 2 -->
+                <div class="work-item group relative bg-[#1a1a1a] border border-[#333] hover:border-[#ff00ff] transition-all duration-300 hover:-translate-y-1" data-category="MOVIE">
+                    <div class="w-full aspect-video bg-green-500 relative overflow-hidden">
+                        <img src="https://imgur.com/WX8ftVE" alt="Work 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold border border-[#00ff00]">CHECK</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[#00ff00] text-xs font-bold tracking-widest border border-[#00ff00] px-2 py-0.5 rounded-sm">REAL</span>
+                            <span class="text-gray-500 text-xs">2026</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-[#ff00ff] transition-colors">猫</h3>
+                        <div class="w-full h-px bg-[#333] group-hover:bg-[#ff00ff] transition-colors my-3"></div>
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span></span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Item 3 -->
+                <div class="work-item group relative bg-[#1a1a1a] border border-[#333] hover:border-[#ff00ff] transition-all duration-300 hover:-translate-y-1" data-category="DESIGN">
+                    <div class="w-full aspect-video bg-purple-500 relative overflow-hidden">
+                        <img src="https://imgur.com/8hnrD9J" alt="Work 3" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold border border-[#00ff00]">CHECK</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[#00ff00] text-xs font-bold tracking-widest border border-[#00ff00] px-2 py-0.5 rounded-sm">REAL</span>
+                            <span class="text-gray-500 text-xs">2026</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-[#ff00ff] transition-colors">海</h3>
+                        <div class="w-full h-px bg-[#333] group-hover:bg-[#ff00ff] transition-colors my-3"></div>
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span></span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Item 4 -->
+                <div class="work-item group relative bg-[#1a1a1a] border border-[#333] hover:border-[#ff00ff] transition-all duration-300 hover:-translate-y-1" data-category="GOODS">
+                    <div class="w-full aspect-video bg-blue-500 relative overflow-hidden">
+                        <img src="https://imgur.com/6fEF5be" alt="Work 4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold border border-[#00ff00]">CHECK</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[#00ff00] text-xs font-bold tracking-widest border border-[#00ff00] px-2 py-0.5 rounded-sm"></span>
+                            <span class="text-gray-500 text-xs"></span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-[#ff00ff] transition-colors"></h3>
+                        <div class="w-full h-px bg-[#333] group-hover:bg-[#ff00ff] transition-colors my-3"></div>
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span></span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Item 5 -->
+                <div class="work-item group relative bg-[#1a1a1a] border border-[#333] hover:border-[#ff00ff] transition-all duration-300 hover:-translate-y-1" data-category="DESIGN">
+                    <div class="w-full aspect-video bg-yellow-500 relative overflow-hidden">
+                        <img src="https://imgur.com/6fEF5be" alt="Work 5" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold border border-[#00ff00]">CHECK</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[#00ff00] text-xs font-bold tracking-widest border border-[#00ff00] px-2 py-0.5 rounded-sm"></span>
+                            <span class="text-gray-500 text-xs"></span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-[#ff00ff] transition-colors"></h3>
+                        <div class="w-full h-px bg-[#333] group-hover:bg-[#ff00ff] transition-colors my-3"></div>
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span></span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Work Item 6 -->
+                 <div class="work-item group relative bg-[#1a1a1a] border border-[#333] hover:border-[#ff00ff] transition-all duration-300 hover:-translate-y-1" data-category="ILLUSTRATION">
+                    <div class="w-full aspect-video bg-red-500 relative overflow-hidden">
+                        <img src="https://imgur.com/6fEF5be" alt="Work 6" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold border border-[#00ff00]">CHECK</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[#00ff00] text-xs font-bold tracking-widest border border-[#00ff00] px-2 py-0.5 rounded-sm"></span>
+                            <span class="text-gray-500 text-xs"></span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-[#ff00ff] transition-colors"></h3>
+                        <div class="w-full h-px bg-[#333] group-hover:bg-[#ff00ff] transition-colors my-3"></div>
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span></span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule / Info Section -->
+        <section className="mb-32 grid md:grid-cols-2 gap-12">
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- News Terminal -->
+                <div class="border border-[#333] bg-black p-6 font-mono text-sm relative">
+                    <div class="absolute top-0 left-0 bg-[#00ff00] text-black px-2 text-xs font-bold">LATEST NEWS</div>
+                    <ul class="mt-6 space-y-4">
+                        <li class="flex gap-4">
+                            <span class="text-[#ff00ff]">2026.02.13</span>
+                            <span class="text-gray-300">サイト開設</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="text-[#ff00ff]"></span>
+                            <span class="text-gray-300"></span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="text-[#ff00ff]"></span>
+                            <span class="text-gray-300"></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- About Mini -->
+                <div id="about" class="flex flex-col justify-center">
+                    <h2 class="text-3xl font-black mb-6 flex items-center gap-2">
+                        <span class="w-3 h-3 bg-[#ff00ff] rounded-full animate-pulse"></span>
+                        PROFILE
+                    </h2>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        名前:YurufuwaCider<br/>
+                        主に、FPSやMMOをプレイしている。<br/>
+                        最近はVRを買って色々楽しんでいる模様...
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://discord.gg/DqaCQBVJ" class="bg-[#1a1a1a] p-2 border border-[#333] hover:border-[#00ff00] cursor-pointer text-white">
+                            <!-- Discord Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561 19.903 19.903 0 005.9933 3.0314.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057 13.1141 13.1141 0 01-1.872-1.892.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873 1.8916.078.078 0 00-.0407.1067c.36.698.7713 1.3628 1.225 1.9932a.076.076 0 00.0842.0286 19.8349 19.8349 0 006.0028-3.03.077.077 0 00.0321-.0543c.5007-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1569 2.419zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419z"/>
+                            </svg>
+                        </a>
+                        <a href="www.youtube.com/@kibun_shidai" class="bg-[#1a1a1a] p-2 border border-[#333] hover:border-[#ff00ff] cursor-pointer text-white">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- フッター (石板のフッター風) --><footer class="bg-black/70 p-4 text-center text-xs text-gray-500 border-t-2 border-gray-800">
-        <p>&copy; 2025 Ashen One's Chronicle. All rights reserved. 闇に踏み入り、探求せよ。</p>
+    <!-- Footer -->
+    <footer class="border-t border-[#333] bg-[#000] py-8 text-center text-xs text-gray-600 font-mono">
+        <p class="mb-2"></p>
+        <p>&copy; 2025 YOUR NAME ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <!-- Firebase SDKのインポート --><script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // Firestore関連のインポートはすべて削除
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
 
-        // =======================================================
-        // GitHub Pages/ローカル実行対応のためのグローバル変数定義
-        // =======================================================
+        // Loading Screen Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.classList.add('opacity-0', 'pointer-events-none');
+            }, 800);
+        });
 
-        // Canvasグローバル変数を安全に取得し、ない場合はデフォルト値を設定
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'github-portfolio-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // Clock Logic
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ja-JP', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            document.getElementById('clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        // Firebase初期化に必要な変数
-        let app, auth; // db変数を削除
-        let userId = null;
-        let isAuthReady = false;
-        
-        // Firebase設定が存在する場合のみ初期化を実行
-        if (Object.keys(firebaseConfig).length > 0) {
-            app = initializeApp(firebaseConfig);
-            // dbの初期化を削除
-            auth = getAuth(app);
+        // Filtering Logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const workItems = document.querySelectorAll('.work-item');
 
-            // 認証処理
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                } else if (initialAuthToken) {
-                    // カスタムトークンがある場合、Canvas環境でのサインインを試みる
-                    try {
-                        const result = await signInWithCustomToken(auth, initialAuthToken);
-                        userId = result.user.uid;
-                    } catch (error) {
-                        console.error("Custom token sign-in failed, signing in anonymously.", error);
-                        await signInAnonymously(auth);
-                        userId = auth.currentUser.uid;
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button style
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-[#ff00ff]', 'border-[#ff00ff]', 'text-black');
+                    b.classList.add('border-[#333]', 'text-gray-400');
+                });
+                btn.classList.remove('border-[#333]', 'text-gray-400');
+                btn.classList.add('bg-[#ff00ff]', 'border-[#ff00ff]', 'text-black');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                // Filter items
+                workItems.forEach(item => {
+                    if (filterValue === 'ALL' || item.getAttribute('data-category') === filterValue) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
                     }
-                } else {
-                    // GitHub/ローカル環境など、トークンがない場合は匿名サインイン
-                    await signInAnonymously(auth);
-                    userId = auth.currentUser.uid;
-                }
-                
-                isAuthReady = true;
-                console.log("Firebase Auth Ready. User ID:", userId);
-                document.getElementById('user-id-display').textContent = `User ID: ${userId}`;
-                
-                // 認証完了後、初期ページのレンダリングを続行
-                window.dispatchEvent(new Event('auth-ready'));
+                });
             });
-        } else {
-            // Firebase設定がない場合の警告と静的モードでの動作
-            console.warn("GitHub Pages/ローカル実行モード: Firebase設定が存在しないため、認証情報が表示されますが機能しません。");
-            
-            // 静的モードとして動作させる
-            isAuthReady = true;
-            document.getElementById('user-id-display').textContent = `User ID: STATIC_MODE`;
-            window.dispatchEvent(new Event('auth-ready'));
-        }
-
-        // =======================================================
-        // FIREBASE / FIRESTORE 関連関数 (すべて削除)
-        // =======================================================
-
-        // Canvas描画のためのグローバル変数 (すべて削除)
-        // Canvas描画ロジック (すべて削除)
-
-        // =======================================================
-        // ★ 画像URLの定義 (ここを編集して画像を差し替えます) ★
-        // =======================================================
-        const imageUrls = {
-            // メインの横長画像 (1200x400)
-            main: "https://i.imgur.com/8hnrD9J.jpeg",
-            // RTAゴールの正方形画像 (400x400)
-            rta: "https://i.imgur.com/XwtuXuq.jpeg",
-            // 篝火（休息地）の正方形画像 (400x400)
-            bonfire: "https://i.imgur.com/N9LPrk3.jpeg",
-            // CS2クラッチモーメントの正方形画像 (400x400)
-            cs: "https://i.imgur.com/WX8ftVE.jpeg",
-        };
-
-
-        // ページコンテンツのテンプレート (「manuscript」を削除)
-        const pages = {
-            home: `
-                <div class="ds-container w-full max-w-4xl p-10 mt-10 rounded-lg text-center">
-                    <h1 class="text-6xl font-extrabold text-amber-500 tracking-wider mb-6 uppercase">
-                        Welcome, Ashen One.
-                    </h1>
-                    <h2 class="text-2xl text-gray-400 mb-8 font-serif italic">
-                        名もなき者よ、ようこそ。この地は、私の成し遂げた偉業の記録。
-                    </h2>
-                    <p class="text-lg text-gray-300 leading-relaxed">
-                        古き誓約の記録を閲覧するには「誓約」、闇に魅入られた戦場を辿るには「遺物」を選べ。
-                        そして、過去の記憶の残滓を追体験するには「幻影」を選べ。
-                    </p>
-                    <button onclick="window.changePage('profile')" class="mt-8 ds-button text-lg bg-gray-800 text-amber-500 py-3 px-8 rounded-md uppercase font-bold tracking-widest">
-                        旅を始める
-                    </button>
-                </div>
-            `,
-            profile: `
-                <div class="ds-container w-full max-w-4xl p-10 mt-10 rounded-lg">
-                    <h1 class="text-4xl font-bold text-red-600 mb-8 border-b-2 border-gray-700 pb-3 uppercase">
-                        誓約 - 古き誓約の記録
-                    </h1>
-                    
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <!-- 基本情報 (ステータス) --><div>
-                            <h2 class="text-2xl font-bold text-amber-500 mb-4">基本情報 (Status)</h2>
-                            <dl class="space-y-3 text-left">
-                                <div class="flex justify-between border-b border-gray-800 pb-1">
-                                    <dt class="text-gray-400">名前 / 呼び名:</dt>
-                                    <dd class="font-semibold text-gray-200">YurufuwaCider / てん</dd>
-                                </div>
-                                <div class="flex justify-between border-b border-gray-800 pb-1">
-                                    <dt class="text-gray-400">素性 / Class:</dt>
-                                    <dd class="font-semibold text-gray-200">ゲーマー</dd>
-                                </div>
-                                <div class="flex justify-between border-b border-gray-800 pb-1">
-                                    <dt class="text-gray-400">レベル / Soul Level:</dt>
-                                    <dd class="font-semibold text-gray-200">Lv. ??? (常に成長中)</dd>
-                                </div>
-                                <div class="flex justify-between border-b border-gray-800 pb-1">
-                                    <dt class="text-gray-400">得意な力 / Key Skill:</dt>
-                                    <dd class="font-semibold text-green-400">元RTAプレイヤー</dd>
-                                </div>
-                            </dl>
-                        </div>
-
-                        <!-- ネットワークID (オンラインプレイ) --><div>
-                            <h2 class="text-2xl font-bold text-amber-500 mb-4">オンラインプレイ</h2>
-                            <div class="space-y-4">
-                                <!-- Discord --><div class="bg-zinc-800 p-4 rounded-md border border-gray-700 flex items-center shadow-lg">
-                                    <span class="text-3xl mr-4 icon-flame">&#x2717;</span> <!-- Custom Cross Icon --><div>
-                                        <p class="text-gray-400 text-sm">Discord ID (誓約の合図)</p>
-                                        <p class="text-xl font-mono text-gray-100 break-all">yurufuwa_cider</p>
-                                    </div>
-                                </div>
-                                
-                                <!-- Steam --><div class="bg-zinc-800 p-4 rounded-md border border-gray-700 flex items-center shadow-lg">
-                                    <span class="text-3xl mr-4 icon-flame">&#x2717;</span> <!-- Custom Cross Icon --><div>
-                                        <p class="text-gray-400 text-sm">Steam Profile (異世界の旅人)</p>
-                                        <p class="text-xl font-mono text-gray-100 break-all">YurufuwaCider</p>
-                                    </div>
-                                </div>
-                                
-                                <!-- YouTube (古文書庫) --><div class="bg-zinc-800 p-4 rounded-md border border-gray-700 flex items-center shadow-lg">
-                                    <span class="text-3xl mr-4 icon-flame">&#x2717;</span> <!-- Custom Cross Icon --><div>
-                                        <p class="text-gray-400 text-sm">Youtube (古文書庫)</p>
-                                        <p class="text-xl font-mono text-gray-100 break-all">@kibun_shidai</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <p class="mt-8 text-center text-gray-500 italic">
-                        「...火の消えかけた灰よ、お前はもう用済みだ」 - 賢者
-                    </p>
-                </div>
-            `,
-            works: `
-                <div class="ds-container w-full max-w-6xl p-10 mt-10 rounded-lg">
-                    <h1 class="text-4xl font-bold text-red-600 mb-10 border-b-2 border-gray-700 pb-3 uppercase text-center">
-                        遺物 - 闇に魅入られた戦場
-                    </h1>
-                    
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- 作品カード 1 --><div class="bg-zinc-800 p-6 rounded-lg border-2 border-gray-700 hover:border-amber-600 transition-all duration-300 shadow-xl">
-                            <h3 class="text-xl font-bold text-amber-500 mb-2 uppercase">Counter-Strike2</h3>
-                            <p class="text-sm text-gray-400 mb-4">[FPS]</p>
-                            <p class="text-gray-300 text-sm">
-                                この地に光はもはや無い。
-我が剣も、信仰も、屍の群れには届かぬ。
-ならば我は、逃げる。生の残滓を掴むために――
-                                (ZombiEscape)
-                            </p>
-                            
-                        </div>
-
-                        <!-- 作品カード 2 --><div class="bg-zinc-800 p-6 rounded-lg border-2 border-gray-700 hover:border-amber-600 transition-all duration-300 shadow-xl">
-                            <h3 class="text-xl font-bold text-amber-500 mb-2 uppercase">DarkSouls</h3>
-                            <p class="text-sm text-gray-400 mb-4">[ActionRPG]</p>
-                            <p class="text-gray-300 text-sm">
-                                かつて時を駆ける者であった。
-誰よりも速く、死と絶望の迷宮を踏破せし者――
-だが今、その足は止まり、ただ灰の風に身を委ねるのみ。
-                                (any％黒騎士の斧槍ルート 46:32)
-                            </p>
-                            
-                        </div>
-
-                        <!-- 作品カード 3 --><div class="bg-zinc-800 p-6 rounded-lg border-2 border-gray-700 hover:border-amber-600 transition-all duration-300 shadow-xl">
-                            <h3 class="text-xl font-bold text-amber-500 mb-2 uppercase">BLUE PROTOCOL: STAR Resonance</h3>
-                            <p class="text-sm text-gray-400 mb-4">[Action]</p>
-                            <p class="text-gray-300 text-sm">
-                                絆が紡ぐ、星の共鳴。
-神秘的な光彩を放つ**「エングラム」**が万物に宿る世界。 
-天を衝くバベルの塔、そして空を舞う浮遊島。
-美しくも残酷なこの地で、あなたは自身の過去を失った一人の旅人として目を覚まします。
-                            </p>
-                            
-                        </div>
-                    </div>
-
-                    <div class="mt-12 text-center">
-                        <p class="text-gray-500 italic">
-                            この偉業は、まだ見ぬ世界への導きの光となる。
-                        </p>
-                    </div>
-                </div>
-            `,
-            phantoms: `
-                <div class="ds-container w-full max-w-6xl p-10 mt-10 rounded-lg">
-                    <!-- 画像URLを外部変数から取得するよう修正 -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- 画像 1: ボス戦の瞬間 (横長 - モバイルで全幅、デスクトップで3カラムスパン) --><div class="sm:col-span-2 lg:col-span-3 bg-zinc-800 p-3 rounded-lg border-2 border-gray-700 shadow-xl overflow-hidden">
-                            <img src="${imageUrls.main}" 
-                                alt="Placeholder image of a dramatic boss fight scene" 
-                                class="w-full h-auto rounded-md object-cover transition duration-300 transform hover:scale-[1.01] hover:shadow-2xl"/>
-                        </div>
-
-                        <!-- 画像 2: RTAゴール (正方形) --><div class="bg-zinc-800 p-4 rounded-lg border-2 border-gray-700 shadow-xl">
-                            <!-- 修正: URLを直接貼り付ける代わりに、変数参照を使用するように変更 -->
-                            <img src="${imageUrls.rta}" 
-                                alt="Placeholder image of RTA finish screen" 
-                                class="w-full h-auto rounded-md object-cover transition duration-300 transform hover:scale-[1.05]"/>
-                        </div>
-
-                        <!-- 画像 3: 拠点（篝火）の風景 (正方形) --><div class="bg-zinc-800 p-4 rounded-lg border-2 border-gray-700 shadow-xl">
-                            <img src="${imageUrls.bonfire}" 
-                                alt="Placeholder image of a peaceful bonfire" 
-                                class="w-full h-auto rounded-md object-cover transition duration-300 transform hover:scale-[1.05]"/>
-                        </div>
-                        
-                        <!-- 画像 4: プレイスタイル (正方形) --><div class="bg-zinc-800 p-4 rounded-lg border-2 border-gray-700 shadow-xl">
-                            <img src="${imageUrls.cs}" 
-                                alt="Placeholder image of Counter-Strike 2 clutch moment" 
-                                class="w-full h-auto rounded-md object-cover transition duration-300 transform hover:scale-[1.05]"/>
-                        </div>
-                    </div>
-                </div>
-            `,
-        };
-
-        // =======================================================
-        // SPA NAVIGATION
-        // =======================================================
-
-        const contentEl = document.getElementById('main-content');
-        const navEl = document.getElementById('nav-menu');
-        let currentPage = 'home';
-
-        /**
-         * ページ内容を切り替えて描画する
-         * @param {string} pageName - 描画するページのキー ('home', 'profile', 'works', 'phantoms')
-         */
-        function renderPage(pageName) {
-            // 描画機能がないため、ページ離脱時の保存処理は不要
-            
-            const template = pages[pageName];
-            if (template) {
-                contentEl.style.opacity = '0';
-                setTimeout(() => {
-                    contentEl.innerHTML = template;
-                    updateActiveNav(pageName);
-                    currentPage = pageName;
-                    
-                    // 「古文書」関連のセットアップロジックはすべて削除
-                    
-                    contentEl.style.opacity = '1';
-                }, 300); 
-
-                window.location.hash = pageName;
-            }
-        }
-
-        /**
-         * アクティブなナビゲーションボタンを更新する
-         */
-        function updateActiveNav(activePage) {
-            document.querySelectorAll('.nav-btn').forEach(button => {
-                const isSelected = button.getAttribute('data-page') === activePage;
-                
-                if (isSelected) {
-                    button.classList.add('text-amber-500', 'border-b-2', 'border-red-600');
-                    button.classList.remove('text-gray-200');
-                } else {
-                    button.classList.remove('text-amber-500', 'border-b-2', 'border-red-600');
-                    button.classList.add('text-gray-200');
-                }
-            });
-        }
-
-        /**
-         * 外部からページ切り替えを呼び出すための関数をwindowスコープに公開
-         */
-        window.changePage = function(pageName) {
-            renderPage(pageName);
-        }
-
-        // ナビゲーションメニューにイベントリスナーを設定
-        navEl.addEventListener('click', (e) => {
-            const target = e.target;
-            if (target.classList.contains('nav-btn')) {
-                const pageName = target.getAttribute('data-page');
-                window.changePage(pageName);
-            }
         });
-
-        // ページロード時の初期化処理
-        function startPortfolioApp() {
-            const hash = window.location.hash.substring(1);
-            const initialPage = pages[hash] ? hash : 'home';
-            renderPage(initialPage);
-        }
-        
-        // 認証完了を待ってアプリを初期化 (Firebase設定がない場合は即時実行)
-        if (isAuthReady) {
-             startPortfolioApp();
-        } else {
-            window.addEventListener('auth-ready', startPortfolioApp);
-        }
-
-        // URLハッシュが変わったときの処理 (ブラウザの戻る/進むボタン対応)
-        window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.substring(1);
-            if (pages[hash] && hash !== currentPage) {
-                window.changePage(hash);
-            }
-        });
-
     </script>
 </body>
 </html>
